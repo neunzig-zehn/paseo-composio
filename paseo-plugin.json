@@ -3,6 +3,12 @@
   "name": "Composio",
   "description": "Sign in to Composio once per host and give new agents your connected apps",
   "icon": "assets/icon.png",
+  "media": [
+    "assets/screenshot-apps.png",
+    "assets/screenshot-tools.png",
+    "assets/screenshot-sign-in.png",
+    "assets/screenshot-mobile.png"
+  ],
   "requirements": {
     "paseo": ">=0.11.0"
   }
