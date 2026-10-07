@@ -16,7 +16,7 @@ The page shows the signed-in account and every app you connected in Composio, wi
 
 ## What it stores and sends
 
-Browser sign-in creates a Composio user API key for the host. The plugin stores it in a private file in the daemon's Paseo home, under `plugins/composio`. **Sign out** deletes the file and revokes a key created by browser sign-in. A pasted key is deleted but not revoked.
+Browser sign-in creates a Composio user API key for the host. The plugin stores it in a private file in the daemon's Paseo home, under `plugin-data/composio`. **Sign out** deletes the file and revokes a key created by browser sign-in. A pasted key is deleted but not revoked.
 
 Each new agent gets its own Composio session in your personal ("For You") project. The agent's MCP configuration carries the key, as Composio requires, so anyone who can read that host's agent configuration can use your Composio apps. Do not sign in on a host other people use.
 

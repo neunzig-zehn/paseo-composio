@@ -20,10 +20,14 @@ const stored = z.discriminatedUnion("kind", [
 ]);
 export type Credentials = z.infer<typeof stored>;
 
+/**
+ * Paseo keeps managed Git and npm checkouts under `<PASEO_HOME>/plugins/<id>`, so the credential
+ * lives beside that tree rather than inside it, where an update or removal would replace it.
+ */
 export function defaultCredentialsPath() {
   return join(
     process.env.PASEO_HOME ?? join(homedir(), ".paseo"),
-    "plugins",
+    "plugin-data",
     "composio",
     "credentials.json",
   );

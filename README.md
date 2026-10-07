@@ -29,7 +29,7 @@ paseo plugin reload composio
 | `index.server.ts`        | Daemon  | RPC handlers and the `agent.create` hook                        |
 | `server/composio-api.ts` | Daemon  | Composio REST and MCP calls                                     |
 | `server/login.ts`        | Daemon  | Browser sign-in through Composio's CLI session flow             |
-| `server/credentials.ts`  | Daemon  | `<PASEO_HOME>/plugins/composio/credentials.json`, mode 0600     |
+| `server/credentials.ts`  | Daemon  | `<PASEO_HOME>/plugin-data/composio/credentials.json`, mode 0600 |
 | `server/agents.ts`       | Daemon  | MCP server for new agents                                       |
 | `shared/composio.ts`     | Both    | RPC contracts and the host-scoped **Add to new agents** setting |
 
