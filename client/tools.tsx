@@ -29,11 +29,13 @@ export function ToolsModal({
       `${tool.name} ${tool.slug} ${tool.description}`.toLowerCase().includes(needle),
     );
   }, [tools.data, search]);
+  // Rows run edge to edge; 24 keeps their text on the modal header's rail.
   const styles = useMemo(
     () => ({
       body: { backgroundColor: theme.colors.surface1 },
       searchBar: {
-        padding: 16,
+        paddingHorizontal: 24,
+        paddingVertical: 16,
         borderBottomWidth: 1,
         borderBottomColor: theme.colors.border,
       },
@@ -48,12 +50,22 @@ export function ToolsModal({
         paddingVertical: 8,
       },
       list: { flex: 1, minHeight: 0 },
-      row: { paddingVertical: 16, paddingHorizontal: 16 },
+      row: { paddingVertical: 16, paddingHorizontal: 24 },
       rowBorder: { borderTopWidth: 1, borderTopColor: theme.colors.border },
       title: { color: theme.colors.foreground, fontSize: 14 },
       hint: { color: theme.colors.foregroundMuted, fontSize: 12, marginTop: 4 },
-      error: { color: theme.colors.statusDanger, fontSize: 12, padding: 16 },
-      empty: { color: theme.colors.foregroundMuted, fontSize: 14, padding: 16 },
+      error: {
+        color: theme.colors.statusDanger,
+        fontSize: 12,
+        paddingVertical: 16,
+        paddingHorizontal: 24,
+      },
+      empty: {
+        color: theme.colors.foregroundMuted,
+        fontSize: 14,
+        paddingVertical: 16,
+        paddingHorizontal: 24,
+      },
     }),
     [theme],
   );
