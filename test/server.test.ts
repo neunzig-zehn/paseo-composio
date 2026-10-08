@@ -225,6 +225,7 @@ describe("app catalog", () => {
         if (slug === "custom_1") throw new ComposioError(404, "Toolkit not found");
         return { name: slug === "gmail" ? "Gmail" : "Airtable", logo: null, toolsCount: 7 };
       },
+      listToolkits: async () => [],
     });
     const apps = await catalog.list(scope);
     assert.deepEqual(
@@ -235,6 +236,45 @@ describe("app catalog", () => {
         ["Airtable", ["3"]],
       ],
     );
+  });
+
+  test("lists every app once a day, adds connected custom apps, and retries a failed list", async () => {
+    let listed = 0;
+    let failing = true;
+    const catalog = new AppCatalog({
+      listConnectedAccounts: async () => [
+        { id: "1", toolkit: { slug: "gmail" }, status: "ACTIVE" },
+        { id: "2", toolkit: { slug: "custom_1" }, status: "ACTIVE" },
+      ],
+      readToolkit: async (_scope, slug) => ({ name: slug, logo: null, toolsCount: null }),
+      listToolkits: async () => {
+        listed += 1;
+        if (failing) throw new ComposioError(503, "Unavailable");
+        return [
+          { slug: "gmail", name: "Gmail", logo: "https://logos.composio.dev/api/gmail" },
+          { slug: "slack", name: "Slack", logo: "https://cdn.example.com/slack.png" },
+        ];
+      },
+    });
+    const errors = mock.method(console, "error", () => {});
+    try {
+      // Without the public list, connected apps still resolve.
+      assert.deepEqual(
+        (await catalog.catalog(scope)).map((entry) => entry.slug).sort(),
+        ["custom_1", "gmail"],
+      );
+      failing = false;
+      const entries = await catalog.catalog(scope);
+      await catalog.catalog(scope);
+      assert.equal(listed, 2);
+      assert.deepEqual(entries, [
+        { slug: "gmail", name: "Gmail", logo: null, connected: true },
+        { slug: "slack", name: "Slack", logo: "https://cdn.example.com/slack.png", connected: false },
+        { slug: "custom_1", name: "custom_1", logo: null, connected: true },
+      ]);
+    } finally {
+      errors.mock.restore();
+    }
   });
 });
 

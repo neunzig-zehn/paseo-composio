@@ -82,6 +82,20 @@ export const tools = defineRpc({
   }),
 });
 
+export const toolkitView = z.object({
+  slug: z.string(),
+  name: z.string(),
+  logo: z.string().nullable(),
+  connected: z.boolean(),
+});
+
+/** Every Composio app, for naming apps in tool calls. Empty without browser sign-in. */
+export const toolkits = defineRpc({
+  name: "composio.toolkits",
+  input: empty,
+  output: z.object({ toolkits: z.array(toolkitView) }),
+});
+
 export const agentSettings = defineSettings({
   id: "agents",
   scope: "host",

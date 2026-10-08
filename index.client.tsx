@@ -1,6 +1,7 @@
 import type { PluginClientContext, PluginSidebarItemProps } from "@getpaseo/plugin/client";
 import { SidebarRow } from "@getpaseo/plugin/client/ui";
 import { ComposioPage, ComposioScreen } from "./client/composio";
+import { addComposioCalls } from "./client/timeline";
 
 function ComposioItem({ currentScreen, openScreen }: PluginSidebarItemProps) {
   return (
@@ -21,5 +22,5 @@ export default function contribute(client: PluginClientContext) {
     icon: "Blocks",
     Component: ComposioPage,
   });
-  return () => {};
+  return addComposioCalls(client);
 }

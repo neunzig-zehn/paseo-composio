@@ -24,16 +24,21 @@ paseo plugin reload composio
 
 | Path                     | Runtime | Role                                                            |
 | ------------------------ | ------- | --------------------------------------------------------------- |
-| `index.client.tsx`       | App     | Sidebar header item, screen, and settings screen                |
-| `client/`                | App     | Composio page and tools modal                                   |
+| `index.client.tsx`       | App     | Sidebar header item, screens, and chat timeline rows            |
+| `client/`                | App     | Composio page, tools modal, and Composio tool-call rows         |
 | `index.server.ts`        | Daemon  | RPC handlers and the `agent.create` hook                        |
 | `server/composio-api.ts` | Daemon  | Composio REST and MCP calls                                     |
 | `server/login.ts`        | Daemon  | Browser sign-in through Composio's CLI session flow             |
 | `server/credentials.ts`  | Daemon  | `<PASEO_HOME>/plugin-data/composio/credentials.json`, mode 0600 |
 | `server/agents.ts`       | Daemon  | MCP server for new agents                                       |
 | `shared/composio.ts`     | Both    | RPC contracts and the host-scoped **Add to new agents** setting |
+| `shared/timeline.ts`     | Both    | Recognizes Composio tool calls and resolves tool slugs to apps  |
 
 Browser sign-in uses the same session flow as `composio login`: the daemon creates a session at `backend.composio.dev`, the user approves it at `dashboard.composio.dev`, and the daemon polls until Composio returns a user API key. The plugin resolves the organization's consumer project and lists connected accounts there. Each new agent gets a separate tool router session in that project.
+
+Chat rows resolve a tool slug such as `GOOGLECALENDAR_EVENTS_LIST` to its app by the longest known app prefix, trying connected apps first. The daemon fetches Composio's full app list at most once a day and the app caches the catalog for an hour, so rows cost no network requests after the first.
+
+Paseo spaces plugin timeline rows like messages, 16px from every neighbor. To sit like Paseo's own tool rows, a Composio row on web reads its neighboring `[data-history-row-id]` rows and offsets its margins: 4px from assistant text, flush against tool, thinking, and other Composio rows. It recognizes Paseo's rows by `data-testid` (`tool-call-badge`, `tool-call-group`, `user-message`), so a change to those in Paseo's web app needs a matching change in `client/timeline.tsx`. Native apps use fixed margins.
 
 ## License
 

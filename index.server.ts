@@ -89,6 +89,14 @@ export default function contribute(server: PluginServerContext) {
     tools: await api.listTools(await account(), toolkit),
   }));
 
+  server.handle(rpc.toolkits, async () => {
+    const credentials = await store.read();
+    // A consumer key cannot list apps; tool rows then fall back to readable slugs.
+    return {
+      toolkits: credentials?.kind === "account" ? await catalog.catalog(credentials) : [],
+    };
+  });
+
   server.before("agent.create", async ({ request }) => {
     const current = await settings.read();
     if (current.status !== "ready" || !current.values.addToNewAgents) return;

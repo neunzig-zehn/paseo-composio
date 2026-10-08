@@ -59,6 +59,12 @@ const toolkit = z.object({
   meta: z.object({ tools_count: z.number().nullish(), logo: z.string().nullish() }).optional(),
 });
 
+const toolkitSummary = z.object({
+  slug: z.string(),
+  name: z.string(),
+  meta: z.object({ logo: z.string().nullish() }).optional(),
+});
+
 const tool = z.object({ slug: z.string(), name: z.string(), description: z.string().nullish() });
 
 const mcpSession = z.object({ mcp: z.object({ url: z.string().url() }) });
@@ -185,6 +191,14 @@ export class ComposioApi {
       logo: result.meta?.logo || null,
       toolsCount: result.meta?.tools_count ?? null,
     };
+  }
+
+  /** Every app Composio offers; about 1,600 entries over two pages. */
+  async listToolkits(scope: AccountScope) {
+    const items = await this.pages("/api/v3.1/toolkits", toolkitSummary, scopeHeaders(scope), {
+      limit: "1000",
+    });
+    return items.map(({ slug, name, meta }) => ({ slug, name, logo: meta?.logo || null }));
   }
 
   async listTools(scope: AccountScope, slug: string) {

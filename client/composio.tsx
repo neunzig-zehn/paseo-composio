@@ -21,6 +21,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import * as rpc from "../shared/composio";
+import { toolkitsKey } from "./timeline";
 import { ToolsModal } from "./tools";
 
 type Status = RpcOutput<typeof rpc.status>;
@@ -70,6 +71,7 @@ export function ComposioPage(props: PluginSurfaceProps) {
   const setStatus = (next: Status) => {
     queryClient.setQueryData(statusKey, next);
     void queryClient.invalidateQueries({ queryKey: appsKey });
+    void queryClient.invalidateQueries({ queryKey: toolkitsKey });
   };
 
   if (status.isPending)
