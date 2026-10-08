@@ -2,27 +2,32 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { appCommands } from "../shared/commands";
 
-const app = (slug: string, connected = true) => ({ slug, name: slug, logo: null, connected });
+const app = (slug: string, name: string, connected = true) => ({
+  slug,
+  name,
+  logo: null,
+  connected,
+});
 
-test("names commands after connected apps, dropping a leading google unless that collides", () => {
+test("names commands after connected apps, falling back to the slug when names collide", () => {
   assert.deepEqual(
     appCommands([
-      app("gmail"),
-      app("googlecalendar"),
-      app("google_search_console"),
-      app("better_stack_mcp"),
-      app("drive"),
-      app("_1password"),
-      app("googledrive"),
-      app("slack", false),
+      app("gmail", "Gmail"),
+      app("googlecalendar", "Google Calendar"),
+      app("better_stack_mcp", "Better Stack MCP"),
+      app("posthog", "PostHog"),
+      app("posthog_mcp", "PostHog"),
+      app("custom_90_10", "90/10"),
+      app("_1password", "1Password"),
+      app("slack", "Slack", false),
     ]).map((command) => [command.name, command.app.slug]),
     [
       ["better-stack-mcp", "better_stack_mcp"],
-      ["calendar", "googlecalendar"],
-      ["drive", "drive"],
+      ["custom-90-10", "custom_90_10"],
       ["gmail", "gmail"],
-      ["googledrive", "googledrive"],
-      ["search-console", "google_search_console"],
+      ["google-calendar", "googlecalendar"],
+      ["posthog", "posthog"],
+      ["posthog-mcp", "posthog_mcp"],
     ],
   );
 });

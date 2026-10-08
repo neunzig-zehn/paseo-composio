@@ -5,32 +5,34 @@ export interface AppCommand {
   app: ToolkitEntry;
 }
 
-/** `googlecalendar` → `calendar`, `google_maps` → `maps`, `_1password` → `1password`. */
-function shortName(slug: string) {
-  return commandName(slug.replace(/^google_?(?=.)/, ""));
-}
-
-function commandName(slug: string) {
-  return slug.replace(/_/g, "-").replace(/^-+|-+$/g, "");
+/** `Google Calendar` → `google-calendar`, `Better Stack MCP` → `better-stack-mcp`. */
+function commandName(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 // Paseo's rule for command names.
 const validName = /^[a-z][a-z0-9-]*$/;
 
 /**
- * One slash command per connected app; a short name that two apps share falls back to the slug.
- * Apps whose name cannot be a command, such as `1password`, get none.
+ * One slash command per connected app, named after the app. A name two apps share, or one that
+ * cannot be a command such as `90-10`, falls back to the slug; apps with neither get none.
  */
 export function appCommands(entries: readonly ToolkitEntry[]): AppCommand[] {
   const connected = entries.filter((entry) => entry.connected);
   const counts = new Map<string, number>();
   for (const app of connected) {
-    counts.set(shortName(app.slug), (counts.get(shortName(app.slug)) ?? 0) + 1);
+    counts.set(commandName(app.name), (counts.get(commandName(app.name)) ?? 0) + 1);
   }
   return connected
     .map((app) => {
-      const short = shortName(app.slug);
-      return { name: counts.get(short) === 1 ? short : commandName(app.slug), app };
+      const name = commandName(app.name);
+      return {
+        name: counts.get(name) === 1 && validName.test(name) ? name : commandName(app.slug),
+        app,
+      };
     })
     .filter((command) => validName.test(command.name))
     .sort((left, right) => left.name.localeCompare(right.name));
@@ -41,9 +43,9 @@ export function commandPrompt(app: ToolkitEntry, args: string) {
   return `Use my ${app.name} through Composio (toolkit \`${app.slug}\`): ${request}`;
 }
 
-/** Lets agents read `/gmail` or `/calendar` anywhere in a message as a Composio app. */
+/** Lets agents read `/gmail` or `/google-calendar` anywhere in a message as a Composio app. */
 export const mentionInstructions =
-  "When the user writes `/name` for an app, such as `/gmail`, `/calendar`, or `/linear`, they mean " +
-  "their app connected through the Composio MCP server: the Composio toolkit with that slug, or " +
-  "with `google` in front of it (`/calendar` is `googlecalendar`, `/drive` is `googledrive`). Use " +
-  "the Composio tools for that app.";
+  "When the user writes `/name` for an app, such as `/gmail`, `/google-calendar`, or `/linear`, " +
+  "they mean their app connected through the Composio MCP server, named by its app name or " +
+  "Composio toolkit slug (`/google-calendar` is `googlecalendar`). Use the Composio tools for " +
+  "that app.";
