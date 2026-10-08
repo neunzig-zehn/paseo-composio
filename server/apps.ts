@@ -3,12 +3,14 @@ import type { AccountScope, ComposioApi, ConnectedAccount } from "./composio-api
 export interface AppSummary {
   slug: string;
   name: string;
+  logo: string | null;
   toolsCount: number | null;
   accounts: { id: string; label: string | null; status: string }[];
 }
 
 interface ToolkitInfo {
   name: string;
+  logo: string | null;
   toolsCount: number | null;
 }
 
@@ -36,6 +38,7 @@ export class AppCatalog {
         return {
           slug,
           name: info.name,
+          logo: info.logo,
           toolsCount: info.toolsCount,
           accounts: connected.map((account) => ({
             id: account.id,
@@ -60,7 +63,7 @@ export class AppCatalog {
       // The app still has usable accounts; show its slug rather than hiding it.
       console.error(`Composio toolkit ${slug} lookup failed:`, error.message);
       this.toolkits.delete(slug);
-      return { name: slug, toolsCount: null };
+      return { name: slug, logo: null, toolsCount: null };
     });
     this.toolkits.set(slug, { info, at: Date.now() });
     return info;

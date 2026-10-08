@@ -55,6 +55,7 @@ export const signOut = defineRpc({ name: "composio.sign_out", input: empty, outp
 export const appView = z.object({
   slug: z.string(),
   name: z.string(),
+  logo: z.string().nullable(),
   toolsCount: z.number().nullable(),
   accounts: z.array(
     z.object({

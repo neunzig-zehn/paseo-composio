@@ -223,7 +223,7 @@ describe("app catalog", () => {
       ],
       readToolkit: async (_scope, slug) => {
         if (slug === "custom_1") throw new ComposioError(404, "Toolkit not found");
-        return { name: slug === "gmail" ? "Gmail" : "Airtable", toolsCount: 7 };
+        return { name: slug === "gmail" ? "Gmail" : "Airtable", logo: null, toolsCount: 7 };
       },
     });
     const apps = await catalog.list(scope);

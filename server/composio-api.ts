@@ -56,7 +56,7 @@ export type ConnectedAccount = z.infer<typeof connectedAccount>;
 
 const toolkit = z.object({
   name: z.string(),
-  meta: z.object({ tools_count: z.number().nullish() }).optional(),
+  meta: z.object({ tools_count: z.number().nullish(), logo: z.string().nullish() }).optional(),
 });
 
 const tool = z.object({ slug: z.string(), name: z.string(), description: z.string().nullish() });
@@ -180,7 +180,11 @@ export class ComposioApi {
         headers: scopeHeaders(scope),
       }),
     );
-    return { name: result.name, toolsCount: result.meta?.tools_count ?? null };
+    return {
+      name: result.name,
+      logo: result.meta?.logo || null,
+      toolsCount: result.meta?.tools_count ?? null,
+    };
   }
 
   async listTools(scope: AccountScope, slug: string) {

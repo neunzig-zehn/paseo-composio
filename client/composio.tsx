@@ -19,7 +19,7 @@ import {
 import type { RpcOutput } from "@getpaseo/plugin";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { Image, ScrollView, View } from "react-native";
 import * as rpc from "../shared/composio";
 import { ToolsModal } from "./tools";
 
@@ -306,24 +306,51 @@ function Apps(props: PluginSurfaceProps) {
             />
           ) : (
             apps.data.apps.map((app) => (
-              <SettingsAction
-                key={app.slug}
-                label={app.name}
-                hint={appHint(app)}
-                error={
-                  app.accounts.some((account) => account.status === "ACTIVE")
-                    ? undefined
-                    : "Expired. Reconnect it in Composio"
-                }
-                actionLabel="Tools"
-                onPress={() => setSelected(app)}
-              />
+              <View key={app.slug} style={appRowStyle}>
+                <AppLogo app={app} theme={props.theme} />
+                <View style={appActionStyle}>
+                  <SettingsAction
+                    label={app.name}
+                    hint={appHint(app)}
+                    error={
+                      app.accounts.some((account) => account.status === "ACTIVE")
+                        ? undefined
+                        : "Expired. Reconnect it in Composio"
+                    }
+                    actionLabel="Tools"
+                    onPress={() => setSelected(app)}
+                  />
+                </View>
+              </View>
             ))
           )}
         </SettingsCard>
       </SettingsSection>
       {selected ? <ToolsModal {...props} app={selected} onClose={() => setSelected(null)} /> : null}
     </>
+  );
+}
+
+// SettingsAction has no leading slot; its row supplies the 16px inset after the logo.
+const appRowStyle = { flexDirection: "row", alignItems: "center", paddingLeft: 16 } as const;
+const appActionStyle = { flex: 1, minWidth: 0 } as const;
+const logoSize = 28;
+
+/** Composio's toolkit logo, or a blank tile of the same size so labels stay aligned. */
+function AppLogo({ app, theme }: { app: App; theme: PluginSurfaceProps["theme"] }) {
+  const [failed, setFailed] = useState(false);
+  const frame = { width: logoSize, height: logoSize, borderRadius: 6 };
+  if (!app.logo || failed) {
+    return <View style={[frame, { backgroundColor: theme.colors.surface2 }]} />;
+  }
+  return (
+    <Image
+      source={{ uri: app.logo }}
+      style={frame}
+      resizeMode="contain"
+      accessibilityIgnoresInvertColors
+      onError={() => setFailed(true)}
+    />
   );
 }
 
