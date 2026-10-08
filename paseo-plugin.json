@@ -1,9 +1,10 @@
 {
   "id": "composio",
   "name": "Composio",
-  "description": "Sign in to Composio once per host and give new agents your connected apps",
+  "description": "Give your agents Gmail, GitHub, Slack, Linear, and 1,000+ more apps",
   "icon": "assets/icon.png",
   "media": [
+    "assets/hero.png",
     "assets/screenshot-apps.png",
     "assets/screenshot-tools.png",
     "assets/screenshot-sign-in.png",

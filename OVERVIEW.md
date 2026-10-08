@@ -1,4 +1,4 @@
-Composio gives Paseo agents the apps you connected in Composio, such as Gmail, Slack, Notion, GitHub, and Linear. Sign in once per host. Every Paseo app connected to that host sees the same connection, and new agents on the host get Composio's MCP tools.
+Composio gives your Paseo agents the apps you connect in Composio: Gmail, GitHub, Slack, Linear, Notion, and more than 1,000 others. Sign in once per host. Every Paseo app connected to that host sees the same connection, and new agents on the host get Composio's MCP tools.
 
 ## Setup
 
@@ -16,11 +16,13 @@ The page shows the signed-in account and every app you connected in Composio, wi
 
 In chat, Composio tool calls show the app they use, with its logo and the action, such as **Gmail** Send email. A call that runs several tools at once shows as one row, such as **Used GitHub, Linear, and 2 more**, that expands into a row per tool. Select a row to see that tool's own input, output, and error. A call that only searches tools or runs Composio's workbench shows as Composio.
 
+Every connected app is also a slash command named after it, such as `/gmail` or `/google-calendar`. `/google-calendar find a free hour on Friday` sends the agent your request together with the app's Composio toolkit. New agents also read `/gmail` anywhere in a message as that app, through a short instruction the plugin adds to their system prompt. Commands follow the app list, so they need browser sign-in or a `uak_` key; they refresh when you sign in or out and every 10 minutes.
+
 ## What it stores and sends
 
 Browser sign-in creates a Composio user API key for the host. The plugin stores it in a private file in the daemon's Paseo home, under `plugin-data/composio`. **Sign out** deletes the file and revokes a key created by browser sign-in. A pasted key is deleted but not revoked.
 
-Each new agent gets its own Composio session in your personal ("For You") project. The agent's MCP configuration carries the key, as Composio requires, so anyone who can read that host's agent configuration can use your Composio apps. Do not sign in on a host other people use.
+With browser sign-in or a `uak_` key, each new agent gets its own Composio session in your personal ("For You") project; with a consumer key, agents use Composio's shared endpoint for that key. The agent's MCP configuration carries the key, as Composio requires, so anyone who can read that host's agent configuration can use your Composio apps. Do not sign in on a host other people use.
 
 The plugin talks only to Composio: `backend.composio.dev` for sign-in, apps, tools, and sessions, and `connect.composio.dev` for consumer keys. The app loads app logos from `logos.composio.dev`.
 

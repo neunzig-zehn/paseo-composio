@@ -1,7 +1,7 @@
 {
   "name": "paseo-composio",
   "private": true,
-  "version": "0.4.1",
+  "version": "0.4.2",
   "files": [
     "paseo-plugin.json",
     "OVERVIEW.md",
@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.server.json",
-    "test": "node --import tsx --test test/*.test.ts"
+    "test": "node --import tsx --test test/*.test.ts",
+    "hero": "\"${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}\" --headless=new --hide-scrollbars --force-device-scale-factor=1.5 --window-size=1200,750 --screenshot=assets/hero.png assets/hero.html"
   },
   "devDependencies": {
     "@getpaseo/plugin": "0.11.0",
@@ -29,7 +30,7 @@
     "typescript": "^5.9.3",
     "zod": "^4.4.3"
   },
-  "description": "Composio for Paseo: sign in once per host and give new agents your connected apps",
+  "description": "Give your agents Gmail, GitHub, Slack, Linear, and 1,000+ more apps",
   "license": "MIT",
   "repository": {
     "type": "git",

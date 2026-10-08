@@ -1,6 +1,6 @@
 # Composio for Paseo
 
-A [Paseo](https://paseo.sh) plugin that connects a host to your [Composio](https://composio.dev) apps and adds Composio's MCP tools to new agents. See [OVERVIEW.md](OVERVIEW.md) for what it does and what it stores.
+A [Paseo](https://paseo.sh) plugin that gives your agents Gmail, GitHub, Slack, Linear, and 1,000+ more apps through [Composio](https://composio.dev). Sign in once per host; new agents get Composio's MCP tools, and every connected app becomes a slash command such as `/gmail`. See [OVERVIEW.md](OVERVIEW.md) for what it does and what it stores.
 
 ## Install
 
@@ -22,6 +22,8 @@ paseo plugin install "$PWD"
 paseo plugin reload composio
 ```
 
+`npm run hero` renders `assets/hero.png`, the first listing image, from `assets/hero.html` with Chrome; set `CHROME` to use another Chromium binary.
+
 | Path                     | Runtime | Role                                                            |
 | ------------------------ | ------- | --------------------------------------------------------------- |
 | `index.client.tsx`       | App     | Sidebar header item, screens, and chat timeline rows            |
@@ -33,6 +35,7 @@ paseo plugin reload composio
 | `server/agents.ts`       | Daemon  | MCP server for new agents                                       |
 | `shared/composio.ts`     | Both    | RPC contracts and the host-scoped **Add to new agents** setting |
 | `shared/timeline.ts`     | Both    | Recognizes Composio tool calls and resolves tool slugs to apps  |
+| `shared/commands.ts`     | Both    | One slash command per connected app, and the mention instruction |
 
 Browser sign-in uses the same session flow as `composio login`: the daemon creates a session at `backend.composio.dev`, the user approves it at `dashboard.composio.dev`, and the daemon polls until Composio returns a user API key. The plugin resolves the organization's consumer project and lists connected accounts there. Each new agent gets a separate tool router session in that project.
 
