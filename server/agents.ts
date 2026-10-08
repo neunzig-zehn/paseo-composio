@@ -1,4 +1,5 @@
 import type { PluginBeforeRequests } from "@getpaseo/plugin/server";
+import { mentionInstructions } from "../shared/commands";
 import { connectMcpUrl, scopeHeaders, type ComposioApi } from "./composio-api";
 import type { Credentials } from "./credentials";
 
@@ -45,6 +46,12 @@ export async function withComposio(
         };
   return {
     ...request,
-    config: { ...config, mcpServers: { ...config.mcpServers, [name]: server } },
+    config: {
+      ...config,
+      mcpServers: { ...config.mcpServers, [name]: server },
+      systemPrompt: config.systemPrompt
+        ? `${config.systemPrompt}\n\n${mentionInstructions}`
+        : mentionInstructions,
+    },
   };
 }
